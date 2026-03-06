@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ hàng</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        body {
+            background: #f4f6f9;
+            font-family: "Inter", sans-serif;
+        }
+
+        .cart-container {
+            max-width: 1050px;
+            margin: 40px auto;
+        }
+
+        .cart-card {
+            background: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 6px 28px rgba(0,0,0,.08);
+        }
+
+        /* ---- Cart item ---- */
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 22px 0;
+            border-bottom: 1px solid #ececec;
+            gap: 25px;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-img {
+            width: 110px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+
+        .info h5 {
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .price {
+            color: #000000;
+            font-weight: 700;
+            margin-top: 5px;
+            font-size: 18px;
+        }
+
+        /* Quantity section */
+        .qty-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #bbb;
+            background: white;
+            font-size: 20px;
+            padding: 0;
+            line-height: 34px;
+        }
+
+        .subtotal {
+            width: 140px;
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            color: #000000;
+            margin-right: 10px;
+        }
+
+        .trash-btn {
+            background: #a4d0b1;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 17px;
+        }
+
+        /* Total */
+        .total-box {
+            text-align: right;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .checkout-btn {
+            padding: 14px 24px;
+            font-size: 18px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<div class="cart-container">
+
+    <div class="cart-card">
+
+        <h3 class="fw-bold mb-4">Giỏ hàng của bạn</h3>
+
+        <!-- EMPTY CART -->
+        <div th:if="${#lists.isEmpty(items)}" class="text-center py-5">
+            <h5 class="mb-3">Giỏ hàng của bạn đang trống.</h5>
+            <a class="btn btn-primary px-4" th:href="@{/products}">
+                <i class="fa fa-shopping-bag"></i> Mua sắm ngay
+            </a>
+        </div>
+
+        <!-- HAS ITEMS -->
+        <div th:if="${not #lists.isEmpty(items)}">
+            <div th:each="it : ${items}" class="cart-item">
+
+                <!-- IMAGE -->
+                <img class="item-img"
+                     th:src="@{'/images/' + ${it.image}}"
+                     onerror="this.src='https://via.placeholder.com/110?text=No+Img'">
+
+                <!-- INFO -->
+                <div class="info">
+                    <h5 th:text="${it.name}"></h5>
+                    <div class="text-muted small">
+                        Mùi: <span th:text="${it.muiLabel}"></span> ·
+                        Dung tích: <span th:text="${it.dungtichLabel}"></span>
+                    </div>
+                    <div class="price"
+                         th:text="${#numbers.formatDecimal(it.unitPrice,0,'COMMA',0,'POINT')} + '₫'"></div>
+                </div>
+
+                <!-- QUANTITY -->
+                <div class="qty-area">
+
+                    <form th:action="@{/cart/increment}" method="post">
+                        <input type="hidden" name="key" th:value="${it.key}">
+                        <button type="submit" class="qty-btn">+</button>
+                    </form>
+
+                    <div class="fw-bold my-1" th:text="${it.quantity}"></div>
+
+                    <form th:action="@{/cart/decrement}" method="post">
+                        <input type="hidden" name="key" th:value="${it.key}">
+                        <button type="submit" class="qty-btn">−</button>
+                    </form>
+
+                </div>
+
+                <!-- SUBTOTAL -->
+                <div class="subtotal"
+                     th:text="${#numbers.formatDecimal(it.subtotal,0,'COMMA',0,'POINT')} + '₫'"></div>
+
+                <!-- DELETE -->
+                <form th:action="@{/cart/remove}" method="post">
+                    <input type="hidden" name="key" th:value="${it.key}">
+                    <button type="submit" class="trash-btn">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </form>
+
+            </div>
+
+            <!-- TOTAL PRICE -->
+            <div class="total-box">
+                Tổng thanh toán:
+                <span th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + '₫'"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+
+                <form th:action="@{/cart/clear}" method="post">
+                    <button class="btn btn-outline-danger px-4">
+                        <i class="fa fa-trash"></i> Xóa toàn bộ
+                    </button>
+                </form>
+
+                <a class="btn btn-success checkout-btn"
+                   th:href="@{/checkout}">
+                    <i class="fa fa-credit-card"></i> Tiến hành thanh toán
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
+
+</body>
+</html>
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="vi" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Giỏ hàng</title>-->
+
+<!--    <link rel="stylesheet"-->
+<!--          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">-->
+<!--    <link rel="stylesheet"-->
+<!--          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">-->
+<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
+
+<!--    <style>-->
+<!--        /* 🌸 Pastel Korean Style */-->
+<!--        body {-->
+<!--            background: #fffafc;-->
+<!--            font-family: "Inter", sans-serif;-->
+<!--        }-->
+
+<!--        .cart-container {-->
+<!--            max-width: 980px;-->
+<!--            margin: 40px auto;-->
+<!--        }-->
+
+<!--        .cart-card {-->
+<!--            background: white;-->
+<!--            padding: 35px;-->
+<!--            border-radius: 22px;-->
+<!--            box-shadow: 0 8px 28px rgba(255, 182, 193, 0.25);-->
+<!--            border: 2px solid #ffe7f0;-->
+<!--        }-->
+
+<!--        h3 {-->
+<!--            color: #ff8fb1;-->
+<!--            font-weight: 800;-->
+<!--        }-->
+
+<!--        /* CART ITEM */-->
+<!--        .cart-item {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            padding: 22px 0;-->
+<!--            border-bottom: 1px dashed #ffd6e8;-->
+<!--            gap: 25px;-->
+<!--        }-->
+
+<!--        .cart-item:last-child {-->
+<!--            border-bottom: none;-->
+<!--        }-->
+
+<!--        .item-img {-->
+<!--            width: 100px;-->
+<!--            height: 100px;-->
+<!--            object-fit: cover;-->
+<!--            border-radius: 14px;-->
+<!--            border: 3px solid #ffe3ef;-->
+<!--            background: #fff0f6;-->
+<!--        }-->
+
+<!--        .info h5 {-->
+<!--            font-weight: 700;-->
+<!--            color: #ff6e96;-->
+<!--        }-->
+
+<!--        .text-muted {-->
+<!--            color: #b3808e !important;-->
+<!--        }-->
+
+<!--        .price {-->
+<!--            color: #ff5c8a;-->
+<!--            font-weight: 700;-->
+<!--            margin-top: 6px;-->
+<!--            font-size: 18px;-->
+<!--        }-->
+
+<!--        /* Quantity buttons */-->
+<!--        .qty-area {-->
+<!--            display: flex;-->
+<!--            flex-direction: column;-->
+<!--            align-items: center;-->
+<!--            margin-right: 25px;-->
+<!--        }-->
+
+<!--        .qty-btn {-->
+<!--            width: 34px;-->
+<!--            height: 34px;-->
+<!--            border-radius: 50%;-->
+<!--            border: none;-->
+<!--            background: #ffd9ec;-->
+<!--            color: #ff4d79;-->
+<!--            font-size: 20px;-->
+<!--            font-weight: bold;-->
+<!--            transition: .2s;-->
+<!--        }-->
+
+<!--        .qty-btn:hover {-->
+<!--            background: #ffbcd6;-->
+<!--        }-->
+
+<!--        .subtotal {-->
+<!--            width: 130px;-->
+<!--            text-align: right;-->
+<!--            font-size: 20px;-->
+<!--            font-weight: 700;-->
+<!--            color: #ff4d79;-->
+<!--            margin-right: 5px;-->
+<!--        }-->
+
+<!--        .trash-btn {-->
+<!--            background: #ff9bbd;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            width: 40px;-->
+<!--            height: 40px;-->
+<!--            border-radius: 50%;-->
+<!--            font-size: 17px;-->
+<!--            transition: .25s;-->
+<!--        }-->
+
+<!--        .trash-btn:hover {-->
+<!--            background: #ff7aa3;-->
+<!--        }-->
+
+<!--        /* Total */-->
+<!--        .total-box {-->
+<!--            text-align: right;-->
+<!--            margin-top: 25px;-->
+<!--            margin-bottom: 10px;-->
+<!--            font-size: 24px;-->
+<!--            font-weight: 800;-->
+<!--            color: #ff4d79;-->
+<!--        }-->
+
+<!--        .checkout-btn {-->
+<!--            padding: 14px 26px;-->
+<!--            font-size: 18px;-->
+<!--            border-radius: 14px;-->
+<!--            background: #ffc2dd;-->
+<!--            border: none;-->
+<!--            font-weight: 600;-->
+<!--            color: #b83356;-->
+<!--            box-shadow: 0 4px 12px rgba(255, 160, 190, 0.4);-->
+<!--            transition: .25s;-->
+<!--        }-->
+
+<!--        .checkout-btn:hover {-->
+<!--            background: #ff9fca;-->
+<!--        }-->
+
+<!--        .clear-btn {-->
+<!--            border-radius: 12px;-->
+<!--            font-size: 16px;-->
+<!--            padding: 10px 18px;-->
+<!--            color: #ff5c8a;-->
+<!--            border: 2px solid #ffb6cf;-->
+<!--            background: #fff3f8;-->
+<!--            transition: .25s;-->
+<!--        }-->
+
+<!--        .clear-btn:hover {-->
+<!--            background: #ffd6e8;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--&lt;!&ndash; HEADER &ndash;&gt;-->
+<!--<div th:replace="~{fragments/header :: siteHeader}"></div>-->
+
+<!--<div class="cart-container">-->
+
+<!--    <div class="cart-card">-->
+<!--        <h3 class="mb-4">🛍️ Giỏ hàng của bạn</h3>-->
+
+<!--        &lt;!&ndash; EMPTY &ndash;&gt;-->
+<!--        <div th:if="${#lists.isEmpty(items)}" class="text-center py-5">-->
+<!--            <h5 style="color:#ff6f9f">Giỏ hàng đang trống rồi 💔</h5>-->
+<!--            <a class="btn checkout-btn mt-3" th:href="@{/products}">-->
+<!--                Tiếp tục mua sắm 💖-->
+<!--            </a>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; HAS ITEMS &ndash;&gt;-->
+<!--        <div th:if="${not #lists.isEmpty(items)}">-->
+
+<!--            <div th:each="it : ${items}" class="cart-item">-->
+
+<!--                &lt;!&ndash; IMAGE &ndash;&gt;-->
+<!--                <img class="item-img"-->
+<!--                     th:src="@{'/images/' + ${it.image}}"-->
+<!--                     onerror="this.src='https://via.placeholder.com/100?text=No+Img'">-->
+
+<!--                &lt;!&ndash; INFO &ndash;&gt;-->
+<!--                <div class="info flex-grow-1">-->
+<!--                    <h5 th:text="${it.name}"></h5>-->
+<!--                    <div class="text-muted small">-->
+<!--                        Mùi: <span th:text="${it.muiLabel}"></span> ·-->
+<!--                        Dung tích: <span th:text="${it.dungtichLabel}"></span>-->
+<!--                    </div>-->
+<!--                    <div class="price"-->
+<!--                         th:text="${#numbers.formatDecimal(it.unitPrice,0,'COMMA',0,'POINT')} + '₫'"></div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; QUANTITY &ndash;&gt;-->
+<!--                <div class="qty-area">-->
+
+<!--                    <form th:action="@{/cart/increment}" method="post">-->
+<!--                        <input type="hidden" name="key" th:value="${it.key}">-->
+<!--                        <button type="submit" class="qty-btn">+</button>-->
+<!--                    </form>-->
+
+<!--                    <div class="fw-bold my-1" th:text="${it.quantity}" style="color:#ff5c8a"></div>-->
+
+<!--                    <form th:action="@{/cart/decrement}" method="post">-->
+<!--                        <input type="hidden" name="key" th:value="${it.key}">-->
+<!--                        <button type="submit" class="qty-btn">−</button>-->
+<!--                    </form>-->
+
+<!--                </div>-->
+
+<!--                &lt;!&ndash; SUBTOTAL &ndash;&gt;-->
+<!--                <div class="subtotal"-->
+<!--                     th:text="${#numbers.formatDecimal(it.subtotal,0,'COMMA',0,'POINT')} + '₫'"></div>-->
+
+<!--                &lt;!&ndash; DELETE &ndash;&gt;-->
+<!--                <form th:action="@{/cart/remove}" method="post">-->
+<!--                    <input type="hidden" name="key" th:value="${it.key}">-->
+<!--                    <button type="submit" class="trash-btn">-->
+<!--                        <i class="fa fa-trash"></i>-->
+<!--                    </button>-->
+<!--                </form>-->
+
+<!--            </div>-->
+
+<!--            &lt;!&ndash; TOTAL &ndash;&gt;-->
+<!--            <div class="total-box">-->
+<!--                Tổng thanh toán:-->
+<!--                <span th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + '₫'"></span>-->
+<!--            </div>-->
+
+<!--            <div class="d-flex justify-content-between mt-4">-->
+
+<!--                <form th:action="@{/cart/clear}" method="post">-->
+<!--                    <button class="clear-btn">-->
+<!--                        <i class="fa fa-trash"></i> Xóa toàn bộ-->
+<!--                    </button>-->
+<!--                </form>-->
+
+<!--                <a class="checkout-btn" th:href="@{/checkout}">-->
+<!--                    <i class="fa fa-heart"></i> Tiến hành thanh toán-->
+<!--                </a>-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--    </div>-->
+<!--</div>-->
+
+<!--<div th:replace="~{fragments/footer :: siteFooter}"></div>-->
+
+<!--</body>-->
+<!--</html>-->

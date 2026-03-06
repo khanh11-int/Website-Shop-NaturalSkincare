@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Đã xảy ra lỗi</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background: #f3f4f6;
+        }
+        .error-card {
+            max-width: 650px;
+            margin: 60px auto;
+            padding: 35px 40px;
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        .error-icon {
+            font-size: 60px;
+            color: #dc3545;
+        }
+        .error-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 15px;
+        }
+        .error-info {
+            text-align: left;
+            margin-top: 25px;
+        }
+        .label {
+            font-weight: 600;
+        }
+        .btn-home {
+            margin-top: 25px;
+            padding: 10px 24px;
+            font-size: 16px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="error-card">
+
+    <div class="error-icon">❌</div>
+
+    <div class="error-title">Đã xảy ra lỗi</div>
+
+    <p class="text-muted">Vui lòng kiểm tra thông tin bên dưới</p>
+
+    <div class="error-info">
+        <p>
+            <span class="label">Mã lỗi:</span>
+            <strong th:text="${status}">?</strong>
+        </p>
+
+        <p>
+            <span class="label">Thông báo:</span>
+            <span th:text="${message}">Không có thông báo</span>
+        </p>
+
+        <p>
+            <span class="label">Đường dẫn:</span>
+            <span th:text="${path}">/</span>
+        </p>
+    </div>
+
+    <a href="/" class="btn btn-primary btn-home">Quay lại trang chủ</a>
+
+</div>
+
+</body>
+</html>

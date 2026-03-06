@@ -1,0 +1,59 @@
+/*.product-card { border-radius: .75rem; transition: transform .18s ease, box-shadow .18s ease; }*/
+/*.product-card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.08); }*/
+
+/*.product-img { height: 220px; object-fit: cover; border-top-left-radius: .75rem; border-top-right-radius: .75rem; }*/
+
+/*.product-name { line-height: 1.35; min-height: 2.6em; }*/
+
+/*.brand-chip { display: inline-block; font-size: .75rem; color: #555; background: #f3f5f7; padding: 2px 8px; border-radius: 12px; }*/
+
+/*.price { font-weight: 700; }*/
+
+
+
+/* Lưới sản phẩm */
+.product-card .card-img-top{
+    height: 220px;
+    object-fit: cover;
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+}
+
+/* Hover nổi nhẹ */
+.product-card{
+    transition: transform .18s ease, box-shadow .18s ease;
+    border-radius: .75rem;
+}
+.product-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+
+/* Tên + brand */
+.product-name{
+    line-height: 1.35;
+    min-height: 2.6em; /* giữ chiều cao đều 2 dòng */
+}
+.brand-chip{
+    display: inline-block;
+    font-size: .75rem;
+    color: #555;
+    background: #f3f5f7;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+/* Giá */
+.price{ font-weight: 700; }
+.old-price{ color: #9aa0a6; text-decoration: line-through; }
+
+/* Badge giảm giá */
+.badge-sale{
+    position: absolute;
+    top: 10px; left: 10px;
+    border-radius: 12px;
+    padding: .35rem .5rem;
+}
+
+/* Input group in toolbar */
+.gap-2 > * { margin-right: .5rem; }

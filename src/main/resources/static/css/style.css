@@ -1,0 +1,55 @@
+/* logo to + không bị Bootstrap giới hạn */
+.brand-logo{
+    height: 80px !important;
+    width: auto;
+    max-height: none !important;
+    object-fit: contain;
+}
+
+/* căn giữa theo chiều dọc cho toàn bộ thanh */
+.navbar .container{ align-items: center; }
+
+/* giảm khoảng trắng dọc của brand để không đội chiều cao navbar */
+.navbar-brand{ padding-top: 0; padding-bottom: 0; }
+
+/* tránh menu bị xuống dòng như "Trang / chủ" */
+.navbar .nav-link{ white-space: nowrap; }
+.navbar .nav-link.text-secondary {
+    color: #6c757d !important;
+    transition: color 0.2s;
+}
+.navbar .nav-link.text-secondary:hover {
+    color: #343a40 !important;
+}
+
+.dropdown-item.text-secondary:hover {
+    color: #343a40 !important;
+    background-color: #f8f9fa;
+}
+.dropdown-item.text-danger:hover {
+    background-color: #fdecea;
+}
+.card {
+    border-radius: 10px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+.text-danger {
+    display: block;
+    font-size: 13px;
+    margin-top: 3px;
+    line-height: 1.2;
+}
+.price { font-weight: 700; font-size: 1.35rem;}
+.text-danger{font-weight: 700;font-size: 1.35rem;}
+

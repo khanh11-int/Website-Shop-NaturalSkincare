@@ -1,0 +1,70 @@
+<!-- fragments/footer.html -->
+<div th:fragment="siteFooter">
+    <footer class="site-footer bg-dark text-light mt-5 pt-4 pb-3">
+        <div class="container">
+            <div class="row">
+                <!-- Giới thiệu -->
+                <div class="col-md-6 mb-3">
+                    <h6>VỀ CHÚNG TÔI</h6>
+                    <p class="small mb-2">
+                        <strong th:text="${appName} ?: 'ShopSkincare'">ShopSkincare</strong> là cửa hàng chuyên về chăm sóc da:
+                        sữa rửa mặt, toner, serum, kem dưỡng, chống nắng… Sản phẩm rõ nguồn gốc, tư vấn chuẩn quy trình,
+                        cam kết trải nghiệm hài lòng.
+                    </p>
+                    <ul class="list-unstyled small mb-0">
+                        <li><span class="mr-2"><i class="fa fa-map-marker"></i></span>HCM · Mở cửa 9:00–21:00</li>
+                        <li><span class="mr-2"><i class="fa fa-envelope"></i></span><a class="text-light" href="mailto:cs@shopskincare.vn">cs@shopskincare.vn</a></li>
+                        <li><span class="mr-2"><i class="fa fa-phone"></i></span>1800.2025 (tư vấn)</li>
+                    </ul>
+                </div>
+
+                <!-- Danh mục sản phẩm -->
+                <div class="col-md-3 mb-3">
+                    <h6>SẢN PHẨM</h6>
+                    <ul class="list-unstyled">
+                        <li><a class="text-light" th:href="@{/loai/{id}(id=1)}">Sữa rửa mặt</a></li>
+                        <li><a class="text-light" th:href="@{/loai/{id}(id=2)}">Toner / Nước hoa hồng</a></li>
+                        <li><a class="text-light" th:href="@{/loai/{id}(id=3)}">Serum / Tinh chất</a></li>
+                        <li><a class="text-light" th:href="@{/loai/{id}(id=4)}">Kem dưỡng ẩm</a></li>
+                        <li><a class="text-light" th:href="@{/loai/{id}(id=5)}">Chống nắng</a></li>
+                        <li><a class="text-light" th:href="@{/loai/{id}(id=6)}">Tẩy trang</a></li>
+                        <li><a class="text-light" th:href="@{/loai/{id}(id=7)}">Mặt nạ</a></li>
+                    </ul>
+                </div>
+
+                <!-- Thông tin nhanh -->
+                <div class="col-md-3 mb-3">
+                    <h6>THÔNG TIN NHANH</h6>
+                    <ul class="list-unstyled">
+                        <li>Đặt hàng: 1800.2025</li>
+                        <li>CSKH / Khiếu nại: 1800.2626</li>
+                        <li>Bảo hành: 1800.2727</li>
+                        <li>Kỹ thuật: 1800.2828</li>
+                    </ul>
+                    <div class="mt-2">
+                        <a href="#" class="text-light mr-2" aria-label="Facebook"><i class="fa fa-facebook"></i></a>
+                        <a href="#" class="text-light mr-2" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+                        <a href="#" class="text-light mr-2" aria-label="TikTok"><i class="fa fa-music"></i></a>
+                        <a href="#" class="text-light" aria-label="YouTube"><i class="fa fa-youtube-play"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="bg-light">
+
+            <!-- Bản quyền -->
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-0">
+                        &copy; <span th:text="${#dates.format(#dates.createNow(),'yyyy')}">2025</span>
+                        <span th:text="${appName} ?: 'ShopSkincare'">ShopSkincare</span>. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-right">
+                    <a class="text-light mr-3" th:href="@{/chinh-sach}">Chính sách</a>
+                    <a class="text-light" th:href="@{/lien-he}">Liên hệ</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

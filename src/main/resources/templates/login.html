@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập - ShopSkincare</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<main class="container my-4">
+    <div class="row justify-content-center">
+        <!-- tăng chiều rộng tương tự register -->
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white text-center border-0 pt-3 pb-2">
+                    <h4 class="text-secondary mb-1">
+                        <i class="fa fa-sign-in mr-2"></i> Đăng nhập
+                    </h4>
+                    <small class="text-muted">Chào mừng bạn quay lại với ShopSkincare</small>
+                </div>
+
+                <div class="card-body px-4 pb-3">
+                    <!-- Thông báo lỗi tổng quát -->
+                    <div th:if="${error}" class="alert alert-danger text-center mb-3">
+                        Sai tên đăng nhập hoặc mật khẩu.
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="form-group mb-3">
+                            <label class="small font-weight-bold mb-1">Tên đăng nhập</label>
+                            <input type="text" name="username"
+                                   class="form-control form-control-sm"
+                                   placeholder="Nhập tên đăng nhập" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="small font-weight-bold mb-1">Mật khẩu</label>
+                            <input type="password" name="password"
+                                   class="form-control form-control-sm"
+                                   placeholder="Nhập mật khẩu" required>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a th:href="@{/register}" class="text-secondary small">
+                                <i class="fa fa-user-plus mr-1"></i> Chưa có tài khoản? Đăng ký
+                            </a>
+                            <button type="submit" class="btn btn-secondary btn-sm px-3">
+                                <i class="fa fa-sign-in mr-1"></i> Đăng nhập
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <p class="text-center text-muted small mt-3">
+                Đăng nhập để theo dõi đơn hàng và quản lý tài khoản của bạn.
+            </p>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

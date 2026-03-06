@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Xác nhận đơn hàng</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        body {
+            background: #f7f7f7;
+            font-family: "Inter", sans-serif;
+        }
+
+        .checkout-container {
+            max-width: 1050px;
+            margin: 40px auto;
+        }
+
+        .checkout-card {
+            background: #fff;
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+        }
+
+        .title-main {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .sub-text {
+            color: #6c757d;
+            margin-bottom: 25px;
+        }
+
+        .section-box {
+            background: #fff;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .product-thumb {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .cart-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #efefef;
+        }
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .price {
+            color: #c62856;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .fs-4 {
+            font-size: 1.4rem;
+        }
+
+        .btn-primary {
+            padding: 12px 22px;
+            font-size: 16px;
+            border-radius: 10px;
+        }
+
+        .btn-outline-secondary {
+            padding: 12px 20px;
+            border-radius: 10px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            height: 44px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<div class="checkout-container">
+    <div class="checkout-card">
+
+        <h2 class="title-main">Xác nhận đơn hàng</h2>
+        <p class="sub-text">Vui lòng kiểm tra thông tin trước khi hoàn tất thanh toán.</p>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form th:action="@{/checkout/pay}" method="post">
+
+            <div class="row mt-4">
+
+                <!-- LEFT SIDE – FORM -->
+                <div class="col-lg-7 order-1 order-lg-1">
+
+                    <!-- THÔNG TIN KHÁCH HÀNG -->
+                    <div class="section-box">
+                        <div class="section-title">Thông tin khách hàng</div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Họ và tên</label>
+                            <input class="form-control"
+                                   name="tenkh"
+                                   th:value="${khach != null ? khach.tenkh : ''}"
+                                   th:readonly="${khach != null}"
+                                   required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input class="form-control"
+                                       type="email"
+                                       name="email"
+                                       th:value="${khach != null ? khach.email : ''}"
+                                       th:readonly="${khach != null}"
+                                       required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Số điện thoại</label>
+                                <input class="form-control"
+                                       name="sodienthoai"
+                                       th:value="${khach != null ? khach.sodienthoai : ''}"
+                                       th:readonly="${khach != null}"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Địa chỉ</label>
+                            <input class="form-control"
+                                   name="diachi"
+                                   th:value="${khach != null ? khach.diachi : ''}"
+                                   th:readonly="${khach != null}"
+                                   required>
+                        </div>
+                    </div>
+
+                    <!-- PHƯƠNG THỨC THANH TOÁN -->
+                    <div class="section-box">
+                        <div class="section-title">Phương thức thanh toán</div>
+
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="paymentType" value="cash" checked>
+                            <label class="form-check-label">Thanh toán khi nhận hàng (COD)</label>
+                        </div>
+
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="paymentType" value="bank">
+                            <label class="form-check-label">Chuyển khoản ngân hàng</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT SIDE – GIỎ HÀNG -->
+                <div class="col-lg-5 order-2 order-lg-2">
+
+                    <div class="section-box">
+                        <div class="section-title">Giỏ hàng</div>
+
+                        <div th:if="${items == null or items.size() == 0}">
+                            <div class="alert alert-info">Giỏ hàng trống</div>
+                        </div>
+
+                        <ul th:if="${items != null and items.size() > 0}" class="list-unstyled">
+
+                            <li th:each="it : ${items}" class="cart-item d-flex align-items-center">
+
+                                <img class="product-thumb mr-3"
+                                     th:src="@{/images/{img}(img=${it.image})}"
+                                     onerror="this.src='https://via.placeholder.com/70?text=No+Img'">
+
+                                <div class="flex-fill">
+                                    <div class="font-weight-semibold" th:text="${it.name}"></div>
+                                    <div class="text-muted small">
+                                        Dung tích:
+                                        <span th:text="${it.getDungtichLabel()}"></span> ·
+                                        Mùi:
+                                        <span th:text="${it.getMuiLabel()}"></span>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <div class="price"
+                                         th:text="${#numbers.formatDecimal(it.unitPrice,0,'COMMA',0,'POINT')} + ' ₫'"></div>
+                                    <div class="text-muted small">
+                                        SL: <span th:text="${it.quantity}"></span>
+                                    </div>
+                                </div>
+
+                            </li>
+
+                        </ul>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <span class="font-weight-bold">Tổng cộng</span>
+                            <span class="price fs-4"
+                                  th:text="${#numbers.formatDecimal(total,0,'COMMA',0,'POINT')} + ' ₫'"></span>
+                        </div>
+                    </div>
+
+                    <!-- BUTTONS — MOBILE -->
+                    <div class="d-block d-lg-none mt-3">
+                        <button class="btn btn-primary w-100 mb-2">Hoàn tất đặt hàng</button>
+                        <a href="/cart" class="btn btn-outline-secondary w-100">Quay lại giỏ hàng</a>
+                    </div>
+
+                </div>
+
+                <!-- BUTTONS — DESKTOP -->
+                <div class="col-lg-7 order-lg-3 mt-3 d-none d-lg-block">
+                    <button class="btn btn-primary mr-2">Hoàn tất đặt hàng</button>
+                    <a href="/cart" class="btn btn-outline-secondary">Quay lại giỏ hàng</a>
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
+
+</body>
+</html>

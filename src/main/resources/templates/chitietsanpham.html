@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|${product.tensp} - Chi tiết sản phẩm|">Chi tiết sản phẩm</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        :root { --radius: 14px; }
+
+        .product-card {
+            border:0; border-radius: var(--radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,.06);
+        }
+        .product-hero { border-radius: var(--radius); overflow:hidden; }
+        .product-hero img { width:100%; }
+
+        .price { font-size:1.9rem; font-weight:800; color:#e74c3c; }
+        .old-price { text-decoration:line-through; color:#888; }
+
+        .opt-pills .pill {
+            border:1px solid #e1e5ea; border-radius:999px;
+            padding:.35rem .8rem; cursor:pointer;
+            margin:0 .35rem .35rem 0;
+        }
+        .opt-pills .pill.active {
+            border-color:#0d6efd; background:#eef5ff;
+            color:#0d6efd; font-weight:600;
+        }
+
+        .qty-control input { width:84px; text-align:center; }
+        .stock-badge { padding:.45rem .6rem; }
+    </style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<div class="container">
+    <nav class="small my-3">
+        <a th:href="@{/}">Trang chủ</a> /
+        <a th:href="@{/products}">Sản phẩm</a> /
+        <span th:text="${product.tensp}"></span>
+    </nav>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+
+        <!-- IMAGE -->
+        <div class="col-lg-6 mb-4">
+            <div class="product-hero bg-white product-card">
+                <img th:src="@{'/images/' + ${product.hinh}}">
+            </div>
+        </div>
+
+        <!-- INFO + BUY PANEL -->
+        <div class="col-lg-6">
+            <div class="product-card p-4 buy-panel">
+
+                <h1 class="h4" th:text="${product.tensp}"></h1>
+                <p class="text-muted" th:text="${product.mota}"></p>
+
+                <!-- PRICE -->
+                <div class="mb-3">
+                    <span class="price" id="mainPrice"
+                          th:text="${#numbers.formatDecimal(mainPrice,0,0)} + '₫'">0₫</span>
+
+                    <small id="oldPriceWrap" class="old-price ml-2" style="display:none">
+                        <span id="oldPriceValue">0₫</span>
+                    </small>
+
+                    <span id="discBadge" class="badge badge-danger ml-2" style="display:none">-0%</span>
+                </div>
+
+                <!-- MÙI HƯƠNG -->
+                <div class="mb-3">
+                    <div class="font-weight-bold mb-2">Mùi hương</div>
+                    <div class="opt-pills" id="muiPills">
+                        <span class="pill"
+                              th:each="m : ${muis}"
+                              th:data-value="${m.idmui}"
+                              th:text="${m.muihuong}"></span>
+                    </div>
+                </div>
+
+                <!-- DUNG TÍCH -->
+                <div class="mb-3">
+                    <div class="font-weight-bold mb-2">Dung tích</div>
+                    <div class="opt-pills" id="dungtichPills">
+                        <span class="pill"
+                              th:each="d : ${volumes}"
+                              th:data-value="${d.iddungtich}"
+                              th:text="${d.dungtich}"></span>
+                    </div>
+                </div>
+
+                <!-- STOCK + QTY -->
+                <div class="d-flex mb-3">
+                    <div>
+                        Kho:
+                        <span id="stockInfo" class="badge badge-secondary stock-badge">—</span>
+                    </div>
+
+                    <div class="ml-auto qty-control input-group input-group-sm" style="max-width:160px">
+                        <div class="input-group-prepend"><span class="input-group-text">SL</span></div>
+                        <input type="number" id="qty" class="form-control" min="1" value="1">
+                    </div>
+                </div>
+
+                <!-- ADD TO CART FORM (FULL FIXED) -->
+                <form id="addToCartForm"
+                      th:action="@{/cart/add}"
+                      method="post"
+                      class="d-flex">
+
+                    <!-- product base -->
+                    <input type="hidden" name="productId"   th:value="${product.masp}">
+                    <input type="hidden" name="name"        th:value="${product.tensp}">
+                    <input type="hidden" name="image"       th:value="${product.hinh}">
+
+                    <!-- FIXED: must match CartController -->
+                    <input type="hidden" id="muiId"        name="muiId">
+                    <input type="hidden" id="muiLabel"     name="muiLabel">
+
+                    <input type="hidden" id="dungtichId"   name="dungtichId">
+                    <input type="hidden" id="dungtichLabel" name="dungtichLabel">
+
+                    <input type="hidden" id="unitPrice"  name="unitPrice">
+                    <input type="hidden" id="qtyInput"   name="quantity" value="1">
+
+                    <button id="btnAddToCart" class="btn btn-primary btn-lg flex-fill" disabled>
+                        <i class="fa fa-cart-plus mr-2"></i>Thêm vào giỏ
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- VARIANT TABLE -->
+    <div class="product-card p-4 mt-4">
+        <h5>Biến thể & tồn kho</h5>
+
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th>Mùi</th>
+                <th>Dung tích</th>
+                <th>Đơn giá</th>
+                <th>Tồn</th>
+            </tr>
+            </thead>
+
+            <tbody id="variantRows">
+            <tr th:each="v : ${variants}"
+                th:attr="data-idmui=${v.mui.idmui},
+                         data-iddungtich=${v.dungTich.iddungtich},
+                         data-dongia=${v.dongia},
+                         data-soluongton=${v.soluongton}">
+                <td th:text="${v.mui.muihuong}"></td>
+                <td th:text="${v.dungTich.dungtich}"></td>
+                <td th:text="${#numbers.formatDecimal(v.dongia,0,0)} + '₫'"></td>
+                <td th:text="${v.soluongton}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
+
+<!-- JAVASCRIPT -->
+<script th:inline="javascript">
+    (function(){
+
+        const currency = v => (v||0).toLocaleString('vi-VN') + '₫';
+
+        const PRODUCT_DISCOUNT = Number(/*[[${discount}]]*/ 0);
+
+        const $price  = document.getElementById('mainPrice');
+        const $oldWrap= document.getElementById('oldPriceWrap');
+        const $oldVal = document.getElementById('oldPriceValue');
+        const $badge  = document.getElementById('discBadge');
+        const $stock  = document.getElementById('stockInfo');
+        const $qty    = document.getElementById('qty');
+        const $btn    = document.getElementById('btnAddToCart');
+
+        const muiPills = [...document.querySelectorAll('#muiPills .pill')];
+        const volPills = [...document.querySelectorAll('#dungtichPills .pill')];
+
+        const variants = [...document.querySelectorAll('#variantRows tr')].map(tr => ({
+            idmui: Number(tr.dataset.idmui),
+            iddungtich: Number(tr.dataset.iddungtich),
+            dongia: Number(tr.dataset.dongia),
+            soluong: Number(tr.dataset.soluongton)
+        }));
+
+        const state = { mui: 0, vol: 0 };
+
+        /** UPDATE HIDDEN INPUTS */
+        function syncForm(v){
+            document.getElementById("unitPrice").value = v.dongia;
+
+            document.getElementById("muiId").value = state.mui;
+            document.getElementById("muiLabel").value =
+                muiPills.find(p => Number(p.dataset.value) === state.mui)?.textContent || "";
+
+            document.getElementById("dungtichId").value = state.vol;
+            document.getElementById("dungtichLabel").value =
+                volPills.find(p => Number(p.dataset.value) === state.vol)?.textContent || "";
+
+            document.getElementById("qtyInput").value = $qty.value;
+        }
+
+        function findVariant(){
+            return variants.find(v =>
+                v.idmui === state.mui && v.iddungtich === state.vol
+            ) || null;
+        }
+
+        function updateUI(){
+            const v = findVariant();
+
+            if (v){
+                const original = v.dongia;
+                const final = Math.max(0, original - PRODUCT_DISCOUNT);
+
+                $price.textContent = currency(final);
+
+                if (PRODUCT_DISCOUNT > 0){
+                    $oldWrap.style.display = '';
+                    $oldVal.textContent = currency(original);
+
+                    const percent = Math.round((PRODUCT_DISCOUNT / original) * 100);
+                    $badge.textContent = `-${percent}%`;
+                    $badge.style.display = '';
+                } else {
+                    $oldWrap.style.display = 'none';
+                    $badge.style.display = 'none';
+                }
+
+                $stock.textContent = v.soluong;
+                $stock.className = "badge stock-badge " + (v.soluong > 0 ? "badge-success" : "badge-danger");
+
+                $btn.disabled = v.soluong <= 0;
+
+                syncForm(v);
+
+            } else {
+                $stock.textContent = '—';
+                $btn.disabled = true;
+                $oldWrap.style.display = 'none';
+                $badge.style.display = 'none';
+            }
+        }
+
+        muiPills.forEach(pill => pill.onclick = () => {
+            state.mui = Number(pill.dataset.value);
+            muiPills.forEach(p => p.classList.toggle('active', p === pill));
+            updateUI();
+        });
+
+        volPills.forEach(pill => pill.onclick = () => {
+            state.vol = Number(pill.dataset.value);
+            volPills.forEach(p => p.classList.toggle('active', p === pill));
+            updateUI();
+        });
+
+        $qty.onchange = () =>
+            document.getElementById("qtyInput").value = $qty.value;
+
+    })();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

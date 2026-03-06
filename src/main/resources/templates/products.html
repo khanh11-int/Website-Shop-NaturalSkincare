@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <title>Tất cả sản phẩm</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <!-- Font Awesome (icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <!-- CSS riêng -->
+    <link rel="stylesheet" th:href="@{/css/products.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        /* đảm bảo badge sale nổi ở góc ảnh */
+        .badge-sale{position:absolute;top:10px;left:10px}
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<main class="container py-4">
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="mb-0 font-weight-bold">Tất cả sản phẩm</h2>
+        <a class="btn btn-outline-secondary btn-sm" th:href="@{/}">← Về trang chủ</a>
+    </div>
+
+    <!-- Grid sản phẩm -->
+    <div class="row">
+        <div class="col-6 col-md-4 col-lg-3 mb-4" th:each="p : ${products}">
+            <div class="card h-100 product-card shadow-sm border-0 position-relative">
+
+                <!-- Badge % giảm (chỉ khi có dongia & giamgia) -->
+                <span class="badge badge-danger badge-sale"
+                      th:if="${p.dongia != null and p.dongia > 0 and p.giamgia != null and p.giamgia > 0}"
+                      th:text="'-' + ${#numbers.formatDecimal((p.giamgia / p.dongia) * 100, 0, 0)} + '%'">-10%</span>
+
+                <a class="d-block" th:href="@{'/product/' + ${p.masp}}">
+                    <img class="card-img-top product-img"
+                         th:src="@{'/images/' + ${p.hinh}}"
+                         th:alt="${p.tensp}">
+                </a>
+
+                <div class="card-body d-flex flex-column">
+                    <h6 class="product-name mb-2" th:text="${p.tensp}">Tên sản phẩm</h6>
+
+                    <div class="mb-2">
+                        <span class="brand-chip" th:if="${p.thuonghieu != null}" th:text="${p.thuonghieu}">Brand</span>
+                    </div>
+
+                    <!-- Giá -->
+                    <div class="mt-auto">
+
+                        <!-- Trường hợp chuẩn: có giá gốc (dongia) -->
+                        <div th:if="${p.dongia != null and p.dongia > 0}">
+                            <!-- Có giảm -->
+                            <div th:if="${p.giamgia != null and p.giamgia > 0}">
+                <small class="text-muted ml-2"><s th:text="${#numbers.formatDecimal(p.dongia,  0, 'COMMA', 0, 'POINT')} + ' ₫'">149.000₫</s></small>
+                <span class="price text-danger font-weight-bold" th:text="${#numbers.formatDecimal(p.dongia - p.giamgia,  0, 'COMMA', 0, 'POINT')} + ' ₫'">129.000₫</span>
+                            </div>
+                            <!-- Không giảm -->
+                            <div th:if="${p.giamgia == null or p.giamgia == 0}">
+                <span class="price font-weight-bold"
+                      th:text="${#numbers.formatDecimal(p.dongia,  0, 'COMMA', 0, 'POINT')} + '₫'">149.000₫</span>
+                            </div>
+                        </div>
+
+                        <!-- Fallback: không có dongia ⇒ dùng giamgia như giá bán -->
+                        <div th:if="${p.dongia == null or p.dongia == 0}">
+              <span class="price text-danger font-weight-bold"
+                    th:text="${p.giamgia != null and p.giamgia > 0} ? ${#numbers.formatDecimal(p.giamgia,0,0)} + ' ₫' : 'Liên hệ'">Liên hệ</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty -->
+        <div class="col-12" th:if="${#lists.isEmpty(products)}">
+            <div class="alert alert-light border text-center mb-0">
+                Chưa có sản phẩm.
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: siteFooter}"></div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" lang="vi">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <title>Tất cả sản phẩm</title>-->
+
+<!--    &lt;!&ndash; Bootstrap &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">-->
+<!--    &lt;!&ndash; Font Awesome (icons) &ndash;&gt;-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">-->
+<!--    &lt;!&ndash; Style riêng &ndash;&gt;-->
+<!--    <link rel="stylesheet" th:href="@{/css/products.css}">-->
+<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
+
+<!--    <style>-->
+<!--        /* Giữ thanh công cụ 1 dòng trên >= md và tránh co quá nhỏ */-->
+<!--        .toolbar.form-inline.flex-md-nowrap .form-control,-->
+<!--        .toolbar.form-inline.flex-md-nowrap .custom-select { min-width: 140px; }-->
+<!--        .toolbar .input-group { min-width: 280px; }-->
+<!--        .brand-chip{font-size:.85rem;padding:.1rem .4rem;border:1px solid #dee2e6;border-radius:.25rem}-->
+<!--        .badge-sale{position:absolute;top:.5rem;left:.5rem}-->
+<!--        .price{font-weight:700}-->
+<!--        .old-price{text-decoration:line-through;color:#6c757d}-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Header &ndash;&gt;-->
+<!--<div th:replace="fragments/header :: siteHeader"></div>-->
+
+<!--<main class="container py-4">-->
+
+<!--    &lt;!&ndash; Title + toolbar &ndash;&gt;-->
+<!--    <h2 class="mb-3 mb-md-0 font-weight-bold">Tất cả sản phẩm</h2>-->
+
+<!--    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-3">-->
+
+<!--        &lt;!&ndash; Thêm class flex-md-nowrap để không xuống dòng trên màn hình md trở lên &ndash;&gt;-->
+<!--        <form class="toolbar form-inline flex-md-nowrap gap-2" th:action="@{/products}" method="get">-->
+<!--            &lt;!&ndash; Tìm kiếm nhanh &ndash;&gt;-->
+<!--            <div class="input-group mr-2 mb-2 mb-md-0">-->
+<!--                <input class="form-control" name="q" th:value="${param.q}"-->
+<!--                       placeholder="Tìm serum, kem dưỡng, chống nắng...">-->
+<!--                <div class="input-group-append">-->
+<!--                    <button class="btn btn-outline-primary" type="submit">-->
+<!--                        <i class="fa fa-search"></i>-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Sắp xếp &ndash;&gt;-->
+<!--            <select class="custom-select mr-2 mb-2 mb-md-0" name="sort" th:value="${param.sort}">-->
+<!--                <option value="">Sắp xếp</option>-->
+<!--                <option value="new">Mới nhất</option>-->
+<!--                <option value="price-asc">Giá tăng dần</option>-->
+<!--                <option value="price-desc">Giá giảm dần</option>-->
+<!--                <option value="view-desc">Xem nhiều</option>-->
+<!--            </select>-->
+
+<!--            &lt;!&ndash; Khoảng giá (min-max) &ndash;&gt;-->
+<!--            <input type="number" min="0" class="form-control mr-1 mb-2 mb-md-0"-->
+<!--                   name="min" th:value="${param.min}" placeholder="Giá từ">-->
+<!--            <span class="mx-1 d-none d-md-inline">–</span>-->
+<!--            <input type="number" min="0" class="form-control mr-2 mb-2 mb-md-0"-->
+<!--                   name="max" th:value="${param.max}" placeholder="đến">-->
+
+<!--            <button class="btn btn-primary">Lọc</button>-->
+<!--        </form>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Grid sản phẩm &ndash;&gt;-->
+<!--    <div class="row product-grid">-->
+<!--        &lt;!&ndash; products: nên là List<PageItem/DTO> có các field masp,tensp,hinh,dongia,giamgia,thuonghieu &ndash;&gt;-->
+<!--        <div class="col-6 col-md-4 col-lg-3 mb-4" th:each="p : ${products}">-->
+<!--            <div class="card product-card h-100 shadow-sm border-0 position-relative">-->
+
+<!--                &lt;!&ndash; Badge giảm % &ndash;&gt;-->
+<!--                <span class="badge badge-danger badge-sale"-->
+<!--                      th:if="${p.giamgia != null and p.giamgia > 0 and p.dongia != null and p.dongia > 0}"-->
+<!--                      th:text="|-${#numbers.formatDecimal((p.giamgia / p.dongia) * 100, 0, 0)}%|">-15%</span>-->
+
+<!--                <a class="product-thumb d-block"-->
+<!--                   th:href="@{/product/{id}(id=${p.masp != null ? p.masp : p.mahh})}">-->
+<!--                    <img class="card-img-top"-->
+<!--                         th:src="@{/images/{img}(img=${p.hinh != null ? p.hinh : p.hinhAnh})}"-->
+<!--                         th:alt="${p.tensp != null ? p.tensp : p.tenhh}" />-->
+<!--                </a>-->
+
+<!--                <div class="card-body d-flex flex-column">-->
+<!--                    <h6 class="product-name mb-1" th:text="${p.tensp != null ? p.tensp : p.tenhh}">Tên sản phẩm</h6>-->
+
+<!--                    <div class="mb-2">-->
+<!--                        <span class="brand-chip" th:if="${p.thuonghieu != null}" th:text="${p.thuonghieu}">Brand</span>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Giá &ndash;&gt;-->
+<!--                    <div class="mt-auto">-->
+<!--                        <div th:if="${p.giamgia != null and p.giamgia > 0}">-->
+<!--              <span class="price text-danger"-->
+<!--                    th:text="${#numbers.formatDecimal(p.dongia - p.giamgia, 0, 0)} + '₫'">219.000₫</span>-->
+<!--                            <small class="old-price ml-2"-->
+<!--                                   th:text="${#numbers.formatDecimal(p.dongia, 0, 0)} + '₫'">259.000₫</small>-->
+<!--                        </div>-->
+<!--                        <div th:if="${p.giamgia == null or p.giamgia == 0}">-->
+<!--                            &lt;!&ndash; fallback: có dự án dùng giamgia là 'giá bán' &ndash;&gt;-->
+<!--                            <span class="price"-->
+<!--                                  th:text="${#numbers.formatDecimal(p.dongia, 0, 0)} + '₫'">149.000₫</span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="card-footer bg-white border-0">-->
+<!--                    <div class="d-flex justify-content-between">-->
+<!--                        <a class="btn btn-outline-primary btn-sm"-->
+<!--                           th:href="@{/product/{id}(id=${p.masp != null ? p.masp : p.mahh})}">Xem chi tiết</a>-->
+<!--                        <a class="btn btn-success btn-sm"-->
+<!--                           th:href="@{/cart/add/{id}(id=${p.masp != null ? p.masp : p.mahh})}">-->
+<!--                            Thêm vào giỏ-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Empty state &ndash;&gt;-->
+<!--        <div class="col-12" th:if="${#lists.isEmpty(products)}">-->
+<!--            <div class="alert alert-light border text-center">-->
+<!--                Chưa có sản phẩm phù hợp bộ lọc hiện tại.-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Pagination (nếu dùng Page<?>) &ndash;&gt;-->
+<!--    <nav class="mt-3" th:if="${page != null}">-->
+<!--        <ul class="pagination justify-content-center">-->
+
+<!--            &lt;!&ndash; Prev &ndash;&gt;-->
+<!--            <li class="page-item" th:classappend="${page.first} ? 'disabled'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/products(-->
+<!--             page=${page.number - 1},-->
+<!--             size=${page.size},-->
+<!--             q=${param.q},-->
+<!--             sort=${param.sort},-->
+<!--             min=${param.min},-->
+<!--             max=${param.max}-->
+<!--           )}">«</a>-->
+<!--            </li>-->
+
+<!--            &lt;!&ndash; Page numbers &ndash;&gt;-->
+<!--            <li class="page-item"-->
+<!--                th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"-->
+<!--                th:classappend="${i == page.number} ? 'active'">-->
+<!--                <a class="page-link"-->
+<!--                   th:text="${i + 1}"-->
+<!--                   th:href="@{/products(-->
+<!--             page=${i},-->
+<!--             size=${page.size},-->
+<!--             q=${param.q},-->
+<!--             sort=${param.sort},-->
+<!--             min=${param.min},-->
+<!--             max=${param.max}-->
+<!--           )}">1</a>-->
+<!--            </li>-->
+
+<!--            &lt;!&ndash; Next &ndash;&gt;-->
+<!--            <li class="page-item" th:classappend="${page.last} ? 'disabled'">-->
+<!--                <a class="page-link"-->
+<!--                   th:href="@{/products(-->
+<!--             page=${page.number + 1},-->
+<!--             size=${page.size},-->
+<!--             q=${param.q},-->
+<!--             sort=${param.sort},-->
+<!--             min=${param.min},-->
+<!--             max=${param.max}-->
+<!--           )}">»</a>-->
+<!--            </li>-->
+
+<!--        </ul>-->
+<!--    </nav>-->
+
+<!--</main>-->
+
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+<!--<div th:replace="fragments/footer :: siteFooter"></div>-->
+
+<!--&lt;!&ndash; JS &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+

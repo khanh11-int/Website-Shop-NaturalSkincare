@@ -1,0 +1,154 @@
+<!-- fragments/header.html -->
+<div th:fragment="siteHeader">
+    <header class="sticky-top">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
+            <div class="container">
+
+                <!-- Brand -->
+                <a class="navbar-brand p-0 d-flex align-items-center" th:href="@{/}">
+                    <img th:src="@{/images/logo.png}" alt="ShopSkincare"
+                         class="brand-logo d-inline-block align-top">
+                    <span class="sr-only">ShopSkincare</span>
+                </a>
+
+                <!-- Toggler -->
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#mainNav" aria-controls="mainNav" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Main nav -->
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <!-- Left: menu -->
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/}">
+                                <i class="fa fa-home mr-1"></i>Trang chủ
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown" th:if="${loais != null}">
+                            <a class="nav-link dropdown-toggle" href="#" id="cateDrop" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Danh mục
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="cateDrop">
+                                <a class="dropdown-item"
+                                   th:each="l : ${loais}"
+                                   th:href="@{/loai/{id}(id=${l.maloai})}"
+                                   th:text="${l.tenloai}">Danh mục</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item d-none d-lg-block">
+                            <a class="nav-link" th:href="@{/sale}">
+                                <i class="fa fa-tags mr-1"></i>Khuyến mãi
+                            </a>
+                        </li>
+                        <li class="nav-item d-none d-lg-block">
+                            <a class="nav-link" th:href="@{/new}">
+                                <i class="fa fa-star mr-1"></i>Hàng mới
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- Center: search -->
+                    <form class="form-inline mx-lg-3 my-2 my-lg-0 w-50 d-none d-md-flex"
+                          th:action="@{/search}" method="get" role="search">
+                        <div class="input-group w-100">
+                            <input class="form-control" type="search" name="q"
+                                   placeholder="Tìm serum, kem dưỡng, chống nắng..."
+                                   th:value="${param.q}">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Right: account & cart -->
+                    <ul class="navbar-nav ml-auto align-items-lg-center">
+
+                        <!-- Mobile search icon -->
+                        <li class="nav-item d-md-none">
+                            <a class="nav-link" data-toggle="collapse" href="#mobileSearch">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </li>
+
+                        <!-- Khi chưa đăng nhập -->
+                        <li class="nav-item" th:if="${session.username == null}">
+                            <a class="nav-link text-secondary d-flex align-items-center" th:href="@{/register}">
+                                <i class="fa fa-user-plus mr-1"></i>
+                                <span>Đăng Ký</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item" th:if="${session.username == null}">
+                            <a class="nav-link text-secondary d-flex align-items-center" th:href="@{/login}">
+                                <i class="fa fa-sign-in mr-1"></i>
+                                <span>Đăng Nhập</span>
+                            </a>
+                        </li>
+
+                        <!-- Khi đã đăng nhập -->
+                        <li class="nav-item dropdown" th:if="${session.username != null}">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center text-secondary"
+                               href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-user fa-lg mr-1 text-secondary"></i>
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-right shadow-sm border-0"
+                                 aria-labelledby="userDropdown" style="min-width: 220px;">
+                                <h6 class="dropdown-header text-muted mb-0">
+                                    Xin chào, <span class="font-weight-bold text-dark" th:text="${session.username}">User</span>
+                                </h6>
+                                <div class="dropdown-divider"></div>
+
+                                <a class="dropdown-item d-flex align-items-center text-secondary" th:href="@{/profile}">
+                                    <i class="fa fa-info-circle mr-2 text-secondary"></i>
+                                    <span>Thông tin cá nhân</span>
+                                </a>
+
+                                <a class="dropdown-item d-flex align-items-center text-secondary" th:href="@{/logout}">
+                                    <i class="fa fa-sign-out mr-2 text-secondary"></i>
+                                    <span>Đăng xuất</span>
+                                </a>
+                            </div>
+                        </li>
+
+                        <!-- Giỏ hàng -->
+                        <li class="nav-item ml-lg-2">
+                            <a class="nav-link position-relative" th:href="@{/cart}">
+                                <i class="fa fa-shopping-cart fa-lg"></i>
+                                <span class="badge badge-pill badge-danger position-absolute"
+                                      style="top:0; right:-6px;"
+                                      th:text="${cartCount} ?: 0">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Mobile search collapse -->
+            <div class="bg-light collapse d-md-none border-top" id="mobileSearch">
+                <div class="container py-2">
+                    <form th:action="@{/search}" method="get" role="search">
+                        <div class="input-group">
+                            <input class="form-control" type="search" name="q"
+                                   placeholder="Tìm sản phẩm..." th:value="${param.q}">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary" type="submit">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+</div>
