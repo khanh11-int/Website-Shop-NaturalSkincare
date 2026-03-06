@@ -19,6 +19,7 @@ public interface CTSanPhamRepository extends JpaRepository<CTSanPham, CTSanPhamI
     """)
     List<Object[]> sumStockByProduct();
 
+
     @Query("""
       select ct from CTSanPham ct
       join fetch ct.mui m

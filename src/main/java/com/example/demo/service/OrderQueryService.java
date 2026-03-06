@@ -51,7 +51,15 @@ public class OrderQueryService {
                 ));
             }
 
-            result.add(new MyOrderView(order.getMadonhang(), order.getNgaydat(), order.getTongtien(), items));
+            Integer status = order.getTrangthai() == null ? 1 : order.getTrangthai();
+            String statusLabel = switch (status) {
+                case 2 -> "Đã xác nhận";
+                case 3 -> "Đang giao";
+                case 4 -> "Hoàn thành";
+                case 5 -> "Đã hủy";
+                default -> "Chờ xác nhận";
+            };
+            result.add(new MyOrderView(order.getMadonhang(), order.getNgaydat(), order.getTongtien(), status, statusLabel, items));
         }
         return result;
     }

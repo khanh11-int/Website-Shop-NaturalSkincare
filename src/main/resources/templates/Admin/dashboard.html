@@ -11,66 +11,52 @@
 <div th:replace="~{fragments/header :: siteHeader}"></div>
 
 <main class="container my-4">
-    <h3 class="mb-3"><i class="fa fa-dashboard mr-2"></i>Trang quản trị</h3>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="mb-0"><i class="fa fa-dashboard mr-2"></i>Trang quản trị</h3>
+    </div>
 
     <div class="row mb-4">
-        <div class="col-md-4 mb-2"><div class="card border-0 shadow-sm"><div class="card-body"><small>Tài khoản</small><h4 th:text="${totalAccounts}">0</h4></div></div></div>
-        <div class="col-md-4 mb-2"><div class="card border-0 shadow-sm"><div class="card-body"><small>Sản phẩm</small><h4 th:text="${totalProducts}">0</h4></div></div></div>
-        <div class="col-md-4 mb-2"><div class="card border-0 shadow-sm"><div class="card-body"><small>Đơn hàng</small><h4 th:text="${totalOrders}">0</h4></div></div></div>
-    </div>
-
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white"><b>Quản lý tài khoản</b></div>
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead><tr><th>ID</th><th>Tên</th><th>Username</th><th>Email</th><th>SĐT</th></tr></thead>
-                <tbody>
-                <tr th:each="a : ${accounts}">
-                    <td th:text="${a.makh}"></td>
-                    <td th:text="${a.tenkh}"></td>
-                    <td th:text="${a.username}"></td>
-                    <td th:text="${a.email}"></td>
-                    <td th:text="${a.sodienthoai}"></td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Tài khoản</small><h4 th:text="${totalAccounts}">0</h4></div></div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Sản phẩm</small><h4 th:text="${totalProducts}">0</h4></div></div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Đơn hàng</small><h4 th:text="${totalOrders}">0</h4></div></div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Đơn chờ xác nhận</small><h4 class="text-warning" th:text="${pendingOrders}">0</h4></div></div>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white"><b>Quản lý sản phẩm</b></div>
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead><tr><th>ID</th><th>Sản phẩm</th><th>Tồn kho</th><th>Trạng thái</th></tr></thead>
-                <tbody>
-                <tr th:each="p : ${products}">
-                    <td th:text="${p.masp}"></td>
-                    <td th:text="${p.tensp}"></td>
-                    <td th:text="${stockMap[p.masp] != null ? stockMap[p.masp] : 0}"></td>
-                    <td>
-                        <span class="badge badge-success" th:if="${p.tinhtrang == 1}">Hiển thị</span>
-                        <span class="badge badge-secondary" th:if="${p.tinhtrang != 1}">Ẩn khi hết hàng</span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <a class="card border-0 shadow-sm text-decoration-none text-dark" th:href="@{/admin/customers}">
+                <div class="card-body text-center py-4">
+                    <i class="fa fa-users fa-2x mb-2"></i>
+                    <h5>Quản lý khách hàng</h5>
+                    <small class="text-muted">Xem / Thêm / Sửa / Xoá tài khoản</small>
+                </div>
+            </a>
         </div>
-    </div>
-
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white"><b>Quản lý đơn hàng</b></div>
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead><tr><th>Mã đơn</th><th>Ngày đặt</th><th>Số SP</th><th>Tổng tiền</th></tr></thead>
-                <tbody>
-                <tr th:each="o : ${orders}">
-                    <td th:text="${o.orderId}"></td>
-                    <td th:text="${o.ngaydat}"></td>
-                    <td th:text="${#lists.size(o.items)}"></td>
-                    <td th:text="${#numbers.formatDecimal(o.tongtien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col-md-4 mb-3">
+            <a class="card border-0 shadow-sm text-decoration-none text-dark" th:href="@{/admin/products}">
+                <div class="card-body text-center py-4">
+                    <i class="fa fa-cube fa-2x mb-2"></i>
+                    <h5>Quản lý sản phẩm</h5>
+                    <small class="text-muted">CRUD sản phẩm và trạng thái hiển thị</small>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 mb-3">
+            <a class="card border-0 shadow-sm text-decoration-none text-dark" th:href="@{/admin/orders}">
+                <div class="card-body text-center py-4">
+                    <i class="fa fa-shopping-bag fa-2x mb-2"></i>
+                    <h5>Quản lý đơn hàng</h5>
+                    <small class="text-muted">Cập nhật trạng thái đơn hàng</small>
+                </div>
+            </a>
         </div>
     </div>
 </main>

@@ -17,6 +17,8 @@ public class DonHang {
     private LocalDate ngaydat;
 
     private Long tongtien;
+    // 1: Chờ xác nhận, 2: Đã xác nhận, 3: Đang giao, 4: Hoàn thành, 5: Đã hủy
+    private Integer trangthai;
 
     // guest/customer fields (new in DB schema)
     private String tenkh;
@@ -47,4 +49,7 @@ public class DonHang {
 
     public String getDiachi() { return diachi; }
     public void setDiachi(String diachi) { this.diachi = diachi; }
+
+    public Integer getTrangthai() { return trangthai; }
+    public void setTrangthai(Integer trangthai) { this.trangthai = trangthai; }
 }

@@ -30,6 +30,7 @@ public class DangNhapController {
             KhachHang kh = opt.get();
             session.setAttribute("username", kh.getUsername());
             session.setAttribute("userid", kh.getMakh());
+            session.setAttribute("role", kh.getRole() != null ? kh.getRole().getName() : "USER");
             System.out.println(username);
             return "redirect:/"; // thành công về trang chủ
 

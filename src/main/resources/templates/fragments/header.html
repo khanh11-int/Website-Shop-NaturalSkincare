@@ -119,7 +119,7 @@
                                 </a>
 
                                 <a class="dropdown-item d-flex align-items-center text-secondary"
-                                   th:if="${session.username != null and #strings.equalsIgnoreCase(session.username, 'admin')}"
+                                   th:if="${session.role != null and #strings.equalsIgnoreCase(session.role, 'ADMIN')}"
                                    th:href="@{/admin}">
                                     <i class="fa fa-dashboard mr-2 text-secondary"></i>
                                     <span>Dashboard Admin</span>

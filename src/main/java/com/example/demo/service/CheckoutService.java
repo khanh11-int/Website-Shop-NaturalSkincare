@@ -42,6 +42,7 @@ public class CheckoutService {
         dh.setMakh(makh);
         dh.setNgaydat(LocalDate.now());
         dh.setTongtien(total);
+        dh.setTrangthai(1);
         // set guest/customer info (can be null)
         dh.setTenkh(tenkh);
         dh.setEmail(email);

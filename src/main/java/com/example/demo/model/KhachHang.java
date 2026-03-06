@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+
 @Entity
 @Table(name = "khachhang")
 public class KhachHang {
@@ -39,6 +40,9 @@ public class KhachHang {
     @Pattern(regexp = "^\\+?0?\\d{9,12}$", message = "Số điện thoại không hợp lệ")
     private String sodienthoai;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private Role role;
     // Getters & Setters
     public Integer getMakh() { return makh; }
     public void setMakh(Integer makh) { this.makh = makh; }
@@ -56,4 +60,6 @@ public class KhachHang {
     public void setDiachi(String diachi) { this.diachi = diachi; }
     public String getSodienthoai() { return sodienthoai; }
     public void setSodienthoai(String sodienthoai) { this.sodienthoai = sodienthoai; }
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 }

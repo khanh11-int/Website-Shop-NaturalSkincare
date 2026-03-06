@@ -26,4 +26,12 @@ public class KhachHangService {
     public KhachHang save(KhachHang kh) {
         return khRepo.save(kh);
     }
+
+    public boolean isAdmin(Integer userId) {
+        if (userId == null) return false;
+        return khRepo.findById(userId)
+                .map(KhachHang::getRole)
+                .map(r -> "ADMIN".equalsIgnoreCase(r.getName()))
+                .orElse(false);
+    }
 }

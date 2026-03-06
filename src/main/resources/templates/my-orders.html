@@ -17,7 +17,7 @@
 
     <div class="card border-0 shadow-sm mb-3" th:each="o : ${orders}">
         <div class="card-header bg-white d-flex justify-content-between">
-            <span><b>Mã đơn:</b> <span th:text="${o.orderId}"></span> - <span th:text="${o.ngaydat}"></span></span>
+            <span><b>Mã đơn:</b> <span th:text="${o.orderId}"></span> - <span th:text="${o.ngaydat}"></span> | <span class="badge badge-info" th:text="${o.trangthaiLabel}"></span></span>
             <span class="text-danger font-weight-bold" th:text="${#numbers.formatDecimal(o.tongtien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
         </div>
         <ul class="list-group list-group-flush">
