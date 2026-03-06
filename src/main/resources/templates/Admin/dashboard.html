@@ -4,37 +4,35 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard - ShopSkincare</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
-<body class="bg-light">
+<body class="bg-light admin-page">
 <div th:replace="~{fragments/header :: siteHeader}"></div>
 
 <main class="container my-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="admin-toolbar mb-4">
         <h3 class="mb-0"><i class="fa fa-dashboard mr-2"></i>Trang quản trị</h3>
     </div>
 
     <div class="row mb-4">
         <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Tài khoản</small><h4 th:text="${totalAccounts}">0</h4></div></div>
+            <div class="card border-0 shadow-sm h-100 admin-stat-card"><div class="card-body"><small>Tài khoản</small><h4 th:text="${totalAccounts}">0</h4></div></div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Sản phẩm</small><h4 th:text="${totalProducts}">0</h4></div></div>
+            <div class="card border-0 shadow-sm h-100 admin-stat-card"><div class="card-body"><small>Sản phẩm</small><h4 th:text="${totalProducts}">0</h4></div></div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Đơn hàng</small><h4 th:text="${totalOrders}">0</h4></div></div>
+            <div class="card border-0 shadow-sm h-100 admin-stat-card"><div class="card-body"><small>Sản phẩm</small><h4 th:text="${totalProducts}">0</h4></div></div>
         </div>
         <div class="col-md-3 mb-3">
-            <div class="card border-0 shadow-sm h-100"><div class="card-body"><small>Đơn chờ xác nhận</small><h4 class="text-warning" th:text="${pendingOrders}">0</h4></div></div>
+            <div class="card border-0 shadow-sm h-100 admin-stat-card"><div class="card-body"><small>Đơn chờ xác nhận</small><h4 class="text-warning" th:text="${pendingOrders}">0</h4></div></div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-4 mb-3">
-            <a class="card border-0 shadow-sm text-decoration-none text-dark" th:href="@{/admin/customers}">
+            <a class="card border-0 shadow-sm text-decoration-none text-dark h-100 admin-link-card" th:href="@{/admin/customers}">
                 <div class="card-body text-center py-4">
                     <i class="fa fa-users fa-2x mb-2"></i>
                     <h5>Quản lý khách hàng</h5>
@@ -43,7 +41,7 @@
             </a>
         </div>
         <div class="col-md-4 mb-3">
-            <a class="card border-0 shadow-sm text-decoration-none text-dark" th:href="@{/admin/products}">
+            <a class="card border-0 shadow-sm text-decoration-none text-dark h-100 admin-link-card" th:href="@{/admin/products}">
                 <div class="card-body text-center py-4">
                     <i class="fa fa-cube fa-2x mb-2"></i>
                     <h5>Quản lý sản phẩm</h5>
@@ -52,7 +50,7 @@
             </a>
         </div>
         <div class="col-md-4 mb-3">
-            <a class="card border-0 shadow-sm text-decoration-none text-dark" th:href="@{/admin/orders}">
+            <a class="card border-0 shadow-sm text-decoration-none text-dark h-100 admin-link-card" th:href="@{/admin/orders}">
                 <div class="card-body text-center py-4">
                     <i class="fa fa-shopping-bag fa-2x mb-2"></i>
                     <h5>Quản lý đơn hàng</h5>

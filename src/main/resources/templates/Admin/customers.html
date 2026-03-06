@@ -4,56 +4,55 @@
     <meta charset="UTF-8">
     <title>Quản lý khách hàng</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
-<body class="bg-light">
+<body class="bg-light admin-page">
 <div th:replace="~{fragments/header :: siteHeader}"></div>
 <main class="container my-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>Quản lý khách hàng</h4>
-        <a th:href="@{/admin}" class="btn btn-outline-secondary btn-sm">Về dashboard</a>
-    </div>
+    <div class="admin-toolbar mb-3">
+        <h4 class="mb-0"><i class="fa fa-users mr-2"></i>Quản lý khách hàng</h4>
+        <a th:href="@{/admin}" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left mr-1"></i>Về dashboard</a>
 
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-white"><b>Thêm khách hàng</b></div>
+        <div class="card border-0 shadow-sm mb-4 admin-panel">
+            <div class="card-header bg-white"><b>Thêm khách hàng mới</b></div>
         <div class="card-body">
-            <form th:action="@{/admin/customers/create}" method="post">
+            <form th:action="@{/admin/customers/create}" method="post" class="admin-form">
                 <div class="form-row">
-                    <div class="form-group col-md-3"><input class="form-control form-control-sm" name="tenkh" placeholder="Họ tên" required></div>
-                    <div class="form-group col-md-2"><input class="form-control form-control-sm" name="username" placeholder="Username" required></div>
-                    <div class="form-group col-md-3"><input type="email" class="form-control form-control-sm" name="email" placeholder="Email" required></div>
-                    <div class="form-group col-md-2"><input class="form-control form-control-sm" name="sodienthoai" placeholder="SĐT"></div>
-                    <div class="form-group col-md-2"><input class="form-control form-control-sm" name="matkhau" placeholder="Mật khẩu" required></div>
+                    <div class="form-group col-lg-3 col-md-6"><input class="form-control form-control-sm" name="tenkh" placeholder="Họ tên" required></div>
+                    <div class="form-group col-lg-2 col-md-6"><input class="form-control form-control-sm" name="username" placeholder="Username" required></div>
+                    <div class="form-group col-lg-3 col-md-6"><input type="email" class="form-control form-control-sm" name="email" placeholder="Email" required></div>
+                    <div class="form-group col-lg-2 col-md-6"><input class="form-control form-control-sm" name="sodienthoai" placeholder="SĐT"></div>
+                    <div class="form-group col-lg-2 col-md-6"><input class="form-control form-control-sm" name="matkhau" placeholder="Mật khẩu" required></div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6"><input class="form-control form-control-sm" name="diachi" placeholder="Địa chỉ"></div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-lg-6 col-md-12"><input class="form-control form-control-sm" name="diachi" placeholder="Địa chỉ"></div>
+                    <div class="form-group col-lg-3 col-md-6">
                         <select name="roleId" class="form-control form-control-sm" required>
                             <option th:each="r : ${roles}" th:value="${r.id}" th:text="${r.name}"></option>
                         </select>
                     </div>
-                    <div class="form-group col-md-3"><button class="btn btn-dark btn-sm btn-block">Thêm khách hàng</button></div>
+                    <div class="form-group col-lg-3 col-md-6"><button class="btn btn-dark btn-sm btn-block">Thêm khách hàng</button></div>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
-                <thead><tr><th>ID</th><th>Tên</th><th>Username</th><th>Email</th><th>Role</th><th>Cập nhật</th><th>Xoá</th></tr></thead>
+        <div class="card border-0 shadow-sm admin-panel">
+            <div class="table-responsive admin-table-wrap">
+                <table class="table table-sm mb-0 admin-table">
+                    <thead>
+                    <tr><th>ID</th><th>Tên</th><th>Username</th><th>Email</th><th>Role</th><th>Thông tin & cập nhật</th><th>Xoá</th></tr>
+                    </thead>
                 <tbody>
                 <tr th:each="c : ${customers}">
                     <form th:action="@{/admin/customers/{id}/update(id=${c.makh})}" method="post">
-                        <td th:text="${c.makh}"></td>
+                        <td class="font-weight-bold text-muted" th:text="${c.makh}"></td>
                         <td><input class="form-control form-control-sm" name="tenkh" th:value="${c.tenkh}" required></td>
-                        <td th:text="${c.username}"></td>
+                        <td><span class="font-weight-600" th:text="${c.username}"></span></td>
                         <td><input class="form-control form-control-sm" name="email" th:value="${c.email}" required></td>
                         <td>
                             <select name="roleId" class="form-control form-control-sm">
@@ -61,15 +60,17 @@
                             </select>
                         </td>
                         <td>
-                            <input class="form-control form-control-sm mb-1" name="sodienthoai" th:value="${c.sodienthoai}" placeholder="SĐT">
-                            <input class="form-control form-control-sm mb-1" name="diachi" th:value="${c.diachi}" placeholder="Địa chỉ">
-                            <input class="form-control form-control-sm" name="matkhau" placeholder="Mật khẩu mới (nếu đổi)">
-                            <button class="btn btn-primary btn-sm mt-1">Lưu</button>
+                            <div class="admin-action-stack">
+                                <input class="form-control form-control-sm" name="sodienthoai" th:value="${c.sodienthoai}" placeholder="SĐT">
+                                <input class="form-control form-control-sm" name="diachi" th:value="${c.diachi}" placeholder="Địa chỉ">
+                                <input class="form-control form-control-sm" name="matkhau" placeholder="Mật khẩu mới (nếu đổi)">
+                                <button class="btn btn-primary btn-sm align-self-start"><i class="fa fa-save mr-1"></i>Lưu</button>
+                            </div>
                         </td>
                     </form>
                     <td>
                         <form th:action="@{/admin/customers/{id}/delete(id=${c.makh})}" method="post" onsubmit="return confirm('Xoá khách hàng này?')">
-                            <button class="btn btn-danger btn-sm">Xoá</button>
+                            <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>

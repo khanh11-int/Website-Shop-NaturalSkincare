@@ -4,36 +4,34 @@
     <meta charset="UTF-8">
     <title>Quản lý đơn hàng</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
-    <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 </head>
-<body class="bg-light">
+<body class="bg-light admin-page">
 <div th:replace="~{fragments/header :: siteHeader}"></div>
 <main class="container my-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4>Quản lý đơn hàng</h4>
-        <a th:href="@{/admin}" class="btn btn-outline-secondary btn-sm">Về dashboard</a>
+    <div class="admin-toolbar mb-3">
+        <h4 class="mb-0"><i class="fa fa-shopping-bag mr-2"></i>Quản lý đơn hàng</h4>
+        <a th:href="@{/admin}" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left mr-1"></i>Về dashboard</a>
     </div>
 
     <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-sm mb-0">
+    <div class="card border-0 shadow-sm admin-panel">
+        <div class="table-responsive admin-table-wrap">
+            <table class="table table-sm mb-0 admin-table">
                 <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Ngày</th><th>Tổng</th><th>Trạng thái</th><th>Lưu</th><th>Xoá</th></tr></thead>
                 <tbody>
                 <tr th:each="o : ${orders}">
                     <form th:action="@{/admin/orders/{id}/status(id=${o.madonhang})}" method="post">
-                        <td th:text="${o.madonhang}"></td>
+                        <td class="font-weight-bold text-muted" th:text="${o.madonhang}"></td>
                         <td>
-                            <div th:text="${o.tenkh != null ? o.tenkh : 'KH #' + o.makh}"></div>
+                            <div class="font-weight-600" th:text="${o.tenkh != null ? o.tenkh : 'KH #' + o.makh}"></div>
                             <small class="text-muted" th:text="${o.email}"></small>
                         </td>
                         <td th:text="${o.ngaydat}"></td>
-                        <td th:text="${#numbers.formatDecimal(o.tongtien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                        <td class="font-weight-600" th:text="${#numbers.formatDecimal(o.tongtien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
                         <td>
                             <select class="form-control form-control-sm" name="trangthai">
                                 <option th:each="e : ${orderStatusMap.entrySet()}"
@@ -42,11 +40,11 @@
                                         th:text="${e.value}"></option>
                             </select>
                         </td>
-                        <td><button class="btn btn-primary btn-sm">Cập nhật</button></td>
+                        <td><button class="btn btn-primary btn-sm"><i class="fa fa-save mr-1"></i>Cập nhật</button></td>
                     </form>
                     <td>
                         <form th:action="@{/admin/orders/{id}/delete(id=${o.madonhang})}" method="post" onsubmit="return confirm('Xoá đơn hàng này?')">
-                            <button class="btn btn-danger btn-sm">Xoá</button>
+                            <button class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                         </form>
                     </td>
                 </tr>

@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.controller.User;
 
 import com.example.demo.model.KhachHang;
 import com.example.demo.service.KhachHangService;
