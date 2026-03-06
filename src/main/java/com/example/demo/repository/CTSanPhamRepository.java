@@ -10,6 +10,15 @@ import java.util.List;
 
 public interface CTSanPhamRepository extends JpaRepository<CTSanPham, CTSanPhamId> {
 
+    boolean existsByIdIdsanphamAndSoluongtonGreaterThan(Integer idsanpham, Integer soluongton);
+
+    @Query("""
+      select ct.id.idsanpham, coalesce(sum(ct.soluongton), 0)
+      from CTSanPham ct
+      group by ct.id.idsanpham
+    """)
+    List<Object[]> sumStockByProduct();
+
     @Query("""
       select ct from CTSanPham ct
       join fetch ct.mui m

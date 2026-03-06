@@ -6,9 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
+
+    java.util.List<SanPham> findAllByOrderByNgaylapDesc();
 
     @Query("""
       select new com.example.demo.model.SanPhamWithPrice(
@@ -16,6 +17,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
       )
       from SanPham sp
       join CTSanPham ct on ct.id.idsanpham = sp.masp
+      where sp.tinhtrang = 1
       group by sp.masp, sp.tensp, sp.hinh, sp.giamgia, sp.thuonghieu
       order by sp.ngaylap desc
     """)
@@ -32,7 +34,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
     )
     from SanPham sp
     join CTSanPham ct on ct.id.idsanpham = sp.masp
-    where sp.giamgia > 0
+    where sp.giamgia > 0 and sp.tinhtrang = 1
     group by sp.masp, sp.tensp, sp.hinh, sp.giamgia, sp.thuonghieu
     order by (sp.giamgia / min(ct.dongia)) desc
 """)
@@ -40,17 +42,16 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Integer> {
 
 
     Page<SanPham> findByMaloai(Integer maloai, Pageable pageable);
+
     @Query("""
-  select new com.example.demo.model.SanPhamWithPrice(
-      sp.masp, sp.tensp, sp.hinh, min(ct.dongia), sp.giamgia, sp.thuonghieu
-  )
-  from SanPham sp
-  join CTSanPham ct on ct.id.idsanpham = sp.masp
-  group by sp.masp, sp.tensp, sp.hinh, sp.giamgia, sp.thuonghieu
-  order by sp.ngaylap desc
-""")
+      select new com.example.demo.model.SanPhamWithPrice(
+          sp.masp, sp.tensp, sp.hinh, min(ct.dongia), sp.giamgia, sp.thuonghieu
+      )
+      from SanPham sp
+      join CTSanPham ct on ct.id.idsanpham = sp.masp
+      where sp.tinhtrang = 1
+      group by sp.masp, sp.tensp, sp.hinh, sp.giamgia, sp.thuonghieu
+      order by sp.ngaylap desc
+    """)
     Page<SanPhamWithPrice> findAllWithPrice(Pageable pageable);
-
-
-
 }

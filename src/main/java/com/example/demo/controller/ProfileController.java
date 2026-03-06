@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.KhachHang;
 import com.example.demo.service.KhachHangService;
+import com.example.demo.service.OrderQueryService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,9 @@ public class ProfileController {
 
     @Autowired
     private KhachHangService khService;
+
+    @Autowired
+    private OrderQueryService orderQueryService;
 
     @GetMapping("/profile")
     public String profile(Model model, HttpSession session) {
@@ -35,6 +39,17 @@ public class ProfileController {
         }
 
         return "profile";
+    }
+
+    @GetMapping("/my-orders")
+    public String myOrders(Model model, HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userid");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("orders", orderQueryService.getOrdersByCustomer(userId));
+        return "my-orders";
     }
     @PostMapping("/profile/update")
     public String updateProfile(@ModelAttribute("khachhang") KhachHang formData, HttpSession session) {

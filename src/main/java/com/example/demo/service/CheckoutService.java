@@ -82,13 +82,12 @@ public class CheckoutService {
                 spct.setSoluongton(newStock);
                 ctspRepo.save(spct);
 
-                // Nếu hết hàng → set tình trạng sp = 0
-                if (newStock == 0) {
-                    spRepo.findById(it.getProductId()).ifPresent(sp -> {
-                        sp.setTinhtrang(0);
-                        spRepo.save(sp);
-                    });
-                }
+                // Chỉ ẩn sản phẩm ở trang khách khi tổng tồn kho của toàn bộ biến thể = 0
+                boolean hasStock = ctspRepo.existsByIdIdsanphamAndSoluongtonGreaterThan(it.getProductId(), 0);
+                spRepo.findById(it.getProductId()).ifPresent(sp -> {
+                    sp.setTinhtrang(hasStock ? 1 : 0);
+                    spRepo.save(sp);
+                });
             }
         }
 

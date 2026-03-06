@@ -20,14 +20,14 @@ public interface LoaiRepository extends JpaRepository<Loai, Integer> {
         )
         from SanPham sp
         join CTSanPham ct on ct.id.idsanpham = sp.masp
-        where sp.maloai = :maloai
+        where sp.maloai = :maloai and sp.tinhtrang = 1
         group by sp.masp, sp.tensp, sp.hinh, sp.giamgia, sp.thuonghieu
         """,
             countQuery = """
         select count(distinct sp.masp)
         from SanPham sp
         join CTSanPham ct on ct.id.idsanpham = sp.masp
-        where sp.maloai = :maloai
+        where sp.maloai = :maloai and sp.tinhtrang = 1
         """
     )
     Page<SanPhamWithPrice> findByLoaiWithPrice(@Param("maloai") Integer maloai, Pageable pageable);

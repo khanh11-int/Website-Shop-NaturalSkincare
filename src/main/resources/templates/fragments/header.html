@@ -113,6 +113,18 @@
                                     <span>Thông tin cá nhân</span>
                                 </a>
 
+                                <a class="dropdown-item d-flex align-items-center text-secondary" th:href="@{/my-orders}">
+                                    <i class="fa fa-list-alt mr-2 text-secondary"></i>
+                                    <span>Đơn hàng của tôi</span>
+                                </a>
+
+                                <a class="dropdown-item d-flex align-items-center text-secondary"
+                                   th:if="${session.username != null and #strings.equalsIgnoreCase(session.username, 'admin')}"
+                                   th:href="@{/admin}">
+                                    <i class="fa fa-dashboard mr-2 text-secondary"></i>
+                                    <span>Dashboard Admin</span>
+                                </a>
+
                                 <a class="dropdown-item d-flex align-items-center text-secondary" th:href="@{/logout}">
                                     <i class="fa fa-sign-out mr-2 text-secondary"></i>
                                     <span>Đăng xuất</span>
