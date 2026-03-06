@@ -59,7 +59,7 @@ public class OrderQueryService {
                 case 5 -> "Đã hủy";
                 default -> "Chờ xác nhận";
             };
-            result.add(new MyOrderView(order.getMadonhang(), order.getNgaydat(), order.getTongtien(), status, statusLabel, items));
+            result.add(new MyOrderView(order.getMadonhang(), order.getMakh(), order.getTenkh(), order.getEmail(), order.getNgaydat(), order.getTongtien(), status, statusLabel, items));
         }
         return result;
     }
